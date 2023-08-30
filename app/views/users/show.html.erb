@@ -1,0 +1,9 @@
+<div class="show-item">
+  <%= render @user %>
+</div>
+<nav class="page-nav">
+  <% if @user.email == @current_user_email %>
+    <%= link_to "編集", edit_user_registration_path %>
+  <% end %>
+  <%= link_to "ユーザー一覧に戻る", users_path %>
+</nav>
