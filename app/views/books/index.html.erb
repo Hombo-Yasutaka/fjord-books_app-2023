@@ -1,14 +1,14 @@
 <p style="color: green"><%= notice %></p>
 
-<h1><%= t 'home.title' %></h1>
+<h1><%= t('.title') %></h1>
 
 <div id="books">
   <% @books.each do |book| %>
     <%= render book %>
     <p>
-      <%= link_to t('link_message.show_this_book'), book %>
+      <%= link_to t('.show_book'), book %>
     </p>
   <% end %>
 </div>
 
-<%= link_to t('link_message.new_book'), new_book_path %>
+<%= link_to t('.new_book'), new_book_path %>

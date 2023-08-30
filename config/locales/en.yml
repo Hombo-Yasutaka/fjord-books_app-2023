@@ -1,25 +1,34 @@
 en:
-  home:
-    title: Books
-  new:
-    title: New Book
-  edit:
-    title: Editing Book
-  title: Title
-  memo: Memo
-  author: Author
-  picture: Picture
-  books:
-    create: Book was successfully created.
-    update: Book was successfully updated.
-    destroy: Book was successfully destroyed.
-  link_message:
-    show_this_book: Show this book
-    new_book: New Book
-    edit_this_book: Edit this book
-    back_to_books: Back to books
-    destroy_this_book: Destroy this book
   helpers:
     submit:
       create: Create Book
       update: Update Book
+  activerecord:
+    attributes:
+      book:
+        title: Title
+        memo: Memo
+        author: Author
+        picture: Picture
+  books:
+    index:
+      title: Books
+      show_book: Show this book
+      new_book: New book
+    new:
+      title: New Book
+      back_books: Back to books
+    show:
+      edit_book: Edit Book
+      back_books: Back to books
+      destroy_book: Destroy this book
+    edit:
+      title: Edit
+      back_book: Back to book
+      back_books: Back to books
+    create:
+      create: Book was successfully created.
+    update:
+      update: Book was successfully updated.
+    destroy:
+      destroy: Book was successfully destroyed.
