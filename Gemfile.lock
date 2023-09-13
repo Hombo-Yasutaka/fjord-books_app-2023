@@ -320,6 +320,7 @@ DEPENDENCIES
   jbuilder
   kaminari
   letter_opener_web
+  mini_magick (~> 4.8)
   puma (~> 5.0)
   rails (~> 7.0.4)
   rubocop-fjord
