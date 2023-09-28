@@ -9,7 +9,9 @@ class ReportsController < ApplicationController
   end
 
   # GET /reports/1 or /reports/1.json
-  def show; end
+  def show
+    @comments = @report.comments
+  end
 
   # GET /reports/new
   def new
@@ -19,9 +21,10 @@ class ReportsController < ApplicationController
   # GET /reports/1/edit
   def edit; end
 
-  # POST /reports or /reports.json
+  # POST /reports
   def create
     @report = Report.new(report_params)
+    @report.owner = current_user.id
 
     respond_to do |format|
       if @report.save
@@ -32,7 +35,7 @@ class ReportsController < ApplicationController
     end
   end
 
-  # PATCH/PUT /reports/1 or /reports/1.json
+  # PATCH/PUT /reports/1
   def update
     respond_to do |format|
       if @report.update(report_params)
