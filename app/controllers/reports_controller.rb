@@ -22,6 +22,7 @@ class ReportsController < ApplicationController
     @report = current_user.reports.new(report_params)
 
     if @report.save
+      insert_to_mention if exist_mentioned_ids?
       redirect_to @report, notice: t('controllers.common.notice_create', name: Report.model_name.human)
     else
       render :new, status: :unprocessable_entity
@@ -30,6 +31,8 @@ class ReportsController < ApplicationController
 
   def update
     if @report.update(report_params)
+      @report.mentionings.destroy_all
+      insert_to_mention if exist_mentioned_ids?
       redirect_to @report, notice: t('controllers.common.notice_update', name: Report.model_name.human)
     else
       render :edit, status: :unprocessable_entity
@@ -50,5 +53,20 @@ class ReportsController < ApplicationController
 
   def report_params
     params.require(:report).permit(:title, :content)
+  end
+
+  def exist_mentioned_ids?
+    mentioning_ids = []
+    report_params[:content].scan(%r{#{reports_url}/([1-9][0-9]*)}) do |s|
+      mentioning_ids << s[0].to_i
+    end
+    @existing_mentioned_ids = Report.where(id: mentioning_ids).pluck(:id)
+    @existing_mentioned_ids.present?
+  end
+
+  def insert_to_mention
+    @existing_mentioned_ids.each do |id|
+      Mention.create(mentioning_id: @report.id, mentioned_id: id)
+    end
   end
 end
