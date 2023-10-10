@@ -8,9 +8,7 @@ class UsersController < ApplicationController
   end
 
   # GET /users/1
-  def show
-    @current_user_email = current_user.email
-  end
+  def show; end
 
   private
 
