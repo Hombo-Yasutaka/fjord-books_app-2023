@@ -12,7 +12,7 @@
   <%= button_to t('views.common.destroy', name: Book.model_name.human.downcase), @book, method: :delete %>
 </nav>
 <div id="comments" class="index-items">
-  <% @comments.each do |comment| %>
+  <% @book.comments.each do |comment| %>
     <div class="index-item">
       <%= render comment %>
       <% if current_user.id == comment.owner %>

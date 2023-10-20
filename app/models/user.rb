@@ -8,4 +8,5 @@ class User < ApplicationRecord
     attachable.variant :thumb, resize_to_limit: [150, 150]
   end
   has_many :comments, dependent: :destroy, foreign_key: 'owner', inverse_of: :user
+  has_many :reports, dependent: :destroy, foreign_key: 'owner', inverse_of: :user
 end

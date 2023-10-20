@@ -17,7 +17,7 @@
 </nav>
 
 <div id="comments" class="index-items">
-  <% @comments.each do |comment| %>
+  <% @report.comments.each do |comment| %>
     <div class="index-item">
       <%= render comment %>
       <% if current_user.id == comment.owner %>

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class ReportsController < ApplicationController
-  before_action :set_report, only: %i[show edit update destroy]
+  before_action :set_report, only: %i[edit update destroy]
 
   # GET /reports or /reports.json
   def index
@@ -10,7 +10,7 @@ class ReportsController < ApplicationController
 
   # GET /reports/1 or /reports/1.json
   def show
-    @comments = @report.comments
+    @report = Report.find(params[:id])
   end
 
   # GET /reports/new
@@ -23,8 +23,7 @@ class ReportsController < ApplicationController
 
   # POST /reports
   def create
-    @report = Report.new(report_params)
-    @report.owner = current_user.id
+    @report = current_user.reports.new(report_params)
 
     respond_to do |format|
       if @report.save
@@ -59,7 +58,7 @@ class ReportsController < ApplicationController
 
   # Use callbacks to share common setup or constraints between actions.
   def set_report
-    @report = Report.find(params[:id])
+    @report = current_user.reports.find(params[:id])
   end
 
   # Only allow a list of trusted parameters through.
