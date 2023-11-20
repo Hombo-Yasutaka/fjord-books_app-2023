@@ -1,15 +1,15 @@
 # frozen_string_literal: true
 
-class Reports::CommentsController < ApplicationController
-  before_action :set_report, only: %i[create destroy]
-  before_action :set_comment, only: %i[create destroy]
+class Reports::CommentsController < Base::CommentsController
+  before_action :set_report, only: %i[new create]
 
   def new
-    @comment = current_user.comments.new
+    @comment = @report.comments.new
   end
 
   def create
     @comment = @report.comments.new(comment_params)
+    @comment.owner = current_user.id
 
     respond_to do |format|
       if @comment.save
@@ -24,10 +24,6 @@ class Reports::CommentsController < ApplicationController
 
   def set_report
     @report = Report.find(params[:report_id])
-  end
-
-  def set_comment
-    @comment = @report.comments.new(comment_params)
   end
 
 end

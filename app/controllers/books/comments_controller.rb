@@ -1,14 +1,16 @@
 # frozen_string_literal: true
 
-class CommentsController < Base::CommentsController
-  before_action :set_comment, only: %i[create]
+class Books::CommentsController < Base::CommentsController
+  before_action :set_book, only: %i[new create]
 
   def new
-    book = Book.find(params[:book_id])
-    @comment = book.comments.new
+    @comment = @book.comments.new
   end
 
   def create
+    @comment = @book.comments.new(comment_params)
+    @comment.owner = current_user.id
+
     respond_to do |format|
       if @comment.save
         format.html { redirect_to polymorphic_url(@comment.imageable), notice: 'Comment was successfully created.' }
@@ -24,9 +26,4 @@ class CommentsController < Base::CommentsController
     @book = Book.find(params[:book_id])
   end
 
-  def set_comment
-    book = Book.find(params[:book_id])
-    @comment = book.comments.new(comment_params)
-    @comment.owner = current_user.id
-  end
 end
