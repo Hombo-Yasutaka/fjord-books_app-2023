@@ -25,5 +25,4 @@ class Books::CommentsController < Base::CommentsController
   def set_book
     @book = Book.find(params[:book_id])
   end
-
 end

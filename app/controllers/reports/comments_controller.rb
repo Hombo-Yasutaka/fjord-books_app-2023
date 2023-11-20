@@ -25,5 +25,4 @@ class Reports::CommentsController < Base::CommentsController
   def set_report
     @report = Report.find(params[:report_id])
   end
-
 end
