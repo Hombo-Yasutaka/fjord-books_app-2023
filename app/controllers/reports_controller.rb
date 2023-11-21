@@ -27,8 +27,9 @@ class ReportsController < ApplicationController
       raise ActiveRecord::Rollback unless (insert_to_mention if exist_mentioned_ids?)
 
       redirect_to @report, notice: t('controllers.common.notice_create', name: Report.model_name.human)
+    rescue ActiveRecord::Rollback
+      render :new, status: :unprocessable_entity
     end
-    render :new, status: :unprocessable_entity
   end
 
   def update
@@ -41,8 +42,9 @@ class ReportsController < ApplicationController
       raise ActiveRecord::Rollback unless (insert_to_mention if exist_mentioned_ids?)
 
       redirect_to @report, notice: t('controllers.common.notice_update', name: Report.model_name.human)
+    rescue ActiveRecord::Rollback
+      render :edit, status: :unprocessable_entity
     end
-    render :edit, status: :unprocessable_entity
   end
 
   def destroy
