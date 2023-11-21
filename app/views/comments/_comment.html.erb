@@ -1,0 +1,17 @@
+<div id="<%= dom_id comment %>">
+  <p>
+    <strong><%= Comment.human_attribute_name(:owner) %>:</strong>
+    <%= comment.user.name.present? ? comment.user.name : comment.user.email %>
+  </p>
+
+  <p>
+    <strong><%= Comment.human_attribute_name(:content) %>:</strong>
+    <%= comment.content %>
+  </p>
+
+  <p>
+    <strong><%= Comment.human_attribute_name(:created_at) %>:</strong>
+    <%= l(comment.created_at, format: :long) %>
+  </p>
+
+</div>
