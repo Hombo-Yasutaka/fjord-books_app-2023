@@ -21,22 +21,28 @@ class ReportsController < ApplicationController
   def create
     @report = current_user.reports.new(report_params)
 
-    if @report.save
-      insert_to_mention if exist_mentioned_ids?
+    ActiveRecord::Base.transaction do
+      raise ActiveRecord::Rollback unless @report.save
+
+      raise ActiveRecord::Rollback unless (insert_to_mention if exist_mentioned_ids?)
+
       redirect_to @report, notice: t('controllers.common.notice_create', name: Report.model_name.human)
-    else
-      render :new, status: :unprocessable_entity
     end
+    render :new, status: :unprocessable_entity
   end
 
   def update
-    if @report.update(report_params)
+    ActiveRecord::Base.transaction do
+      raise ActiveRecord::Rollback unless @report.update(report_params)
+
       @report.mentionings.destroy_all
-      insert_to_mention if exist_mentioned_ids?
+      raise ActiveRecord::Rollback unless @report.mentionings.all?(&:destroyed?)
+
+      raise ActiveRecord::Rollback unless (insert_to_mention if exist_mentioned_ids?)
+
       redirect_to @report, notice: t('controllers.common.notice_update', name: Report.model_name.human)
-    else
-      render :edit, status: :unprocessable_entity
     end
+    render :edit, status: :unprocessable_entity
   end
 
   def destroy
@@ -60,6 +66,7 @@ class ReportsController < ApplicationController
     report_params[:content].scan(%r{#{reports_url}/([1-9][0-9]*)}) do |s|
       mentioning_ids << s[0].to_i
     end
+    mentioning_ids.uniq!
     @existing_mentioned_ids = Report.where(id: mentioning_ids).pluck(:id)
     @existing_mentioned_ids.present?
   end
