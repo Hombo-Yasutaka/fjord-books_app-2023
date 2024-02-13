@@ -18,4 +18,24 @@ class Report < ApplicationRecord
   def created_on
     created_at.to_date
   end
+
+  def update_mentions(report_params, reports_url)
+    mentioning_ids = []
+    report_params[:content].scan(%r{#{reports_url}/([1-9]\d*)}) do |s|
+      mentioning_ids << s[0].to_i
+    end
+    mentioning_ids.uniq!
+    existing_mentioned_ids = Report.where(id: mentioning_ids).pluck(:id)
+    if existing_mentioned_ids.present?
+      begin
+        existing_mentioned_ids.each do |mentioned_id|
+          Mention.create!(mentioning_id: id, mentioned_id: mentioned_id)
+        end
+        true
+      rescue
+        false
+      end
+    end
+  end
+
 end
