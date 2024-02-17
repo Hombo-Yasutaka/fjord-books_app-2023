@@ -21,19 +21,25 @@ class ReportsController < ApplicationController
   def create
     @report = current_user.reports.new(report_params)
 
-    if @report.save
+    ActiveRecord::Base.transaction do
+      success = @report.save
+      success &&= @report.update_mentions(report_params, reports_url)
+      raise ActiveRecord::Rollback unless success
       redirect_to @report, notice: t('controllers.common.notice_create', name: Report.model_name.human)
-    else
-      render :new, status: :unprocessable_entity
     end
+  rescue ActiveRecord::Rollback
+    render :new, status: :unprocessable_entity
   end
 
   def update
-    if @report.update(report_params)
+    ActiveRecord::Base.transaction do
+      success = @report.update(report_params)
+      success &&= @report.update_mentions(report_params, reports_url)
+      raise ActiveRecord::Rollback unless success
       redirect_to @report, notice: t('controllers.common.notice_update', name: Report.model_name.human)
-    else
-      render :edit, status: :unprocessable_entity
     end
+  rescue ActiveRecord::Rollback
+    render :edit, status: :unprocessable_entity
   end
 
   def destroy
@@ -51,4 +57,5 @@ class ReportsController < ApplicationController
   def report_params
     params.require(:report).permit(:title, :content)
   end
+
 end
