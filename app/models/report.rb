@@ -27,15 +27,13 @@ class Report < ApplicationRecord
     mentioning_ids.uniq!
     existing_mentioned_ids = Report.where(id: mentioning_ids).pluck(:id)
     if existing_mentioned_ids.present?
-      begin
-        existing_mentioned_ids.each do |mentioned_id|
-          Mention.create!(mentioning_id: id, mentioned_id: mentioned_id)
-        end
-        true
-      rescue
-        false
+      mentionings.destroy_all
+      success = mentionings.all?(&:destroyed?)
+      existing_mentioned_ids.each do |mentioned_id|
+        success &&= Mention.create(mentioning_id: id, mentioned_id: mentioned_id)
       end
     end
+    success
   end
 
 end
